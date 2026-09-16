@@ -1,68 +1,43 @@
-# blynk-controled-car
-int motor1pin1 = 2;
-int motor1pin2 = 4;
-int motor2pin1 = 6;
-int motor2pin2 = 8;
-int trigPin = 12;    // TRIG pin
-int echoPin = 11;    // ECHO pin
-int ir1=8;
-int ir2=9;
+# Blynk-Controlled Car (Arduino)
 
-float duration_us, distance_cm;
-int speed=1;
+This repository contains an Arduino sketch for a motorized car with obstacle detection. Although the repository name suggests it's controlled via [Blynk](https://blynk.io/), the current codebase implements an autonomous obstacle-avoiding routine using an ultrasonic sensor.
 
+## Hardware Components
 
-void setup() {
-  // put your setup code here, to run once:
-  pinMode(motor1pin1, OUTPUT);
-  pinMode(motor1pin2, OUTPUT);
-  pinMode(motor2pin1, OUTPUT);
-  pinMode(motor2pin2, OUTPUT);
-  Serial.begin (9600);
+* **Arduino Board** (e.g., Arduino Uno)
+* **Motor Driver** (e.g., L298N or similar) connected to two DC motors
+* **Ultrasonic Sensor** (HC-SR04) for obstacle detection
+* *(Optional)* IR Sensors (Defined in code but currently unused in the main loop)
 
-  // configure the trigger pin to output mode
-  pinMode(trigPin, OUTPUT);
-  // configure the echo pin to input mode
-  pinMode(echoPin, INPUT);
-}
+## Pin Configuration
 
-void loop() {
-  // put your main code here, to run repeatedly: 
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
+| Component | Pin Function | Arduino Pin |
+| :--- | :--- | :--- |
+| **Motor 1** | IN1 | 2 |
+| | IN2 | 4 |
+| **Motor 2** | IN1 | 6 |
+| | IN2 | 8 |
+| **Ultrasonic Sensor** | TRIG | 12 |
+| | ECHO | 11 |
+| **IR Sensors** | IR1 | 8 (Note: pin conflict with Motor 2 IN2) |
+| | IR2 | 9 |
 
-  // measure duration of pulse from ECHO pin
-  duration_us = pulseIn(echoPin, HIGH);
+## How It Works
 
-  // calculate the distance
-  distance_cm = 0.017 * duration_us;
+The car continuously checks the distance of objects in front of it using the ultrasonic sensor.
+1. **Obstacle Detected (< 50 cm):** If an object is closer than 50 cm, the motors stop and the car halts.
+2. **Clear Path (>= 50 cm):** The car moves forward for 1 second, then backward for 1 second. (This behavior can be modified in the `loop()` function to suit your needs).
 
- 
-  if(distance_cm<50)
-  {
-    Serial.print("it can't move");
-    digitalWrite(motor1pin1, LOW);
-  digitalWrite(motor1pin2, LOW);
+## Getting Started
 
-  digitalWrite(motor2pin1, LOW);
-  digitalWrite(motor2pin2, LOW);
-    
-  }
-  else{
-  digitalWrite(motor1pin1, HIGH);
-  digitalWrite(motor1pin2, LOW);
+1. Clone this repository: `git clone https://github.com/BavanPrabahar/blynk-controled-car.git`
+2. Open the `blynk-controled-car.ino` file in the [Arduino IDE](https://www.arduino.cc/en/software).
+3. Connect your Arduino board and configure the correct board and port under the **Tools** menu.
+4. Verify and upload the code to your Arduino.
+5. Open the Serial Monitor at 9600 baud to see obstacle detection logs.
 
-  digitalWrite(motor2pin1, HIGH);
-  digitalWrite(motor2pin2, LOW);
-  delay(1000);
+## Future Improvements
 
-  digitalWrite(motor1pin1, LOW);
-  digitalWrite(motor1pin2, HIGH);
-
-  digitalWrite(motor2pin1, LOW);
-  digitalWrite(motor2pin2, HIGH);
-  delay(1000);
-  }
-  
-}
+* Integrate the **Blynk IoT platform** to enable remote control via Wi-Fi/Bluetooth.
+* Implement steering or turning logic when an obstacle is detected.
+* Resolve the pin conflict between IR1 and Motor 2.

@@ -1,0 +1,29 @@
+# Arduino
+*.elf
+*.hex
+*.eep
+*.bin
+*.lss
+*.map
+
+# Arduino IDE 1.x
+*.ino.cpp
+*.ino.bin
+*.ino.elf
+*.ino.hex
+*.ino.with_bootloader.bin
+*.ino.with_bootloader.hex
+build/
+
+# Arduino IDE 2.x
+.arduino*/
+*.vscode/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
